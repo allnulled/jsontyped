@@ -1,0 +1,13 @@
+{
+  "name": "@allnulled/jsontyped",
+  "version": "1.0.0",
+  "description": "JSON extension to support external types",
+  "main": "jsontyped.js",
+  "scripts": {
+    "build": "npx pegjs jsontyped.pegjs && node fix.js",
+    "test": "npx mocha test.js"
+  },
+  "keywords": ["json", "extension"],
+  "author": "allnulled",
+  "license": "WTFPL"
+}
