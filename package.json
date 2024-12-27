@@ -1,6 +1,6 @@
 {
   "name": "@allnulled/jsontyped",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JSON extension to support external types",
   "main": "jsontyped.js",
   "scripts": {
@@ -8,7 +8,10 @@
     "test": "npx mocha test.js",
     "up": "bash up.sh"
   },
-  "keywords": ["json", "extension"],
+  "keywords": [
+    "json",
+    "extension"
+  ],
   "author": "allnulled",
   "license": "WTFPL"
 }
