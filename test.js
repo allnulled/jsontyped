@@ -33,5 +33,16 @@ describe("JSON Parser Test", function() {
     console.log(resultado3);
     console.log(resultado4);
   });
+  
+  it("can parse pre-separated noun types", async function() {
+    const resultado1 = jsonParser.parse('@http:///root/message {"mensaje":"hola"}');
+    const resultado2 = jsonParser.parse('@ftp:///message {"mensaje":"hola"}');
+    const resultado3 = jsonParser.parse('@file:///message {"mensaje":"hola"}');
+    const resultado4 = jsonParser.parse('@ufs:///message.txt {"mensaje":"hola"}');
+    console.log(resultado1);
+    console.log(resultado2);
+    console.log(resultado3);
+    console.log(resultado4);
+  });
 
 });

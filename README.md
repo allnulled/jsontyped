@@ -39,8 +39,9 @@ Then it always translate the types to:
 
 ```json
 {
+  $protocol: null,
   $type: "message",
-  value: "This is another level of JSON"
+  $value: "This is another level of JSON"
 }
 ```
 

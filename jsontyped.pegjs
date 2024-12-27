@@ -8,14 +8,16 @@
 Start
   = value:Value { return value; }
 
-Value = tp:Type_def? _ vl:Value_untyped { return tp ? { $type: tp, value: vl } : vl }
+Value = tp:Type_def? _ vl:Value_untyped { return tp ? { ...tp, $value: vl } : vl }
 
 // This is for normal JSON:
 // Value = Value_untyped
 
-Type_def = "@" Type_protocol? p:Js_path { return p }
+Type_def = "@" protocol:Type_protocol? resource:Js_path { return { $protocol: protocol, $type: resource } }
 
-Type_protocol = [A-Za-z0-9_\$\-\.]+ "://" { return text()}
+Type_protocol = protocol:Protocol_noun "://" { return protocol }
+
+Protocol_noun = [A-Za-z0-9_\$\-\.]+ { return text() }
 
 Js_path = 
   first:Js_noun_predotted_maybe
