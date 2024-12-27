@@ -13,16 +13,20 @@ Value = tp:Type_def? _ vl:Value_untyped { return tp ? { $type: tp, value: vl } :
 // This is for normal JSON:
 // Value = Value_untyped
 
-Type_def = "@" p:Js_path { return p }
+Type_def = "@" Type_protocol? p:Js_path { return p }
+
+Type_protocol = [A-Za-z0-9_\$\-\.]+ "://" { return text()}
 
 Js_path = 
-  first:Js_noun
+  first:Js_noun_predotted_maybe
   others:Js_noun_predotted*
     { return text() || [first].concat(others || []) }
 
 Js_noun = [A-Za-z_$] [A-Za-z0-9_$]* { return text() }
 
 Js_noun_predotted = ("." / "/") n:Js_noun { return n }
+
+Js_noun_predotted_maybe = ("." / "/")? n:Js_noun { return n }
 
 Value_untyped
   = Object
