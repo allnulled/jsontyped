@@ -46,3 +46,10 @@ Then it always translate the types to:
 ```
 
 Which is also quite readable. You can customize the output re-building the parser, by `npm run build`.
+
+## Changelog
+
+**22 of January of 2025.**
+
+  - Accepts URLs with protocol, host, path, querystring and section automatically parsed.
+  - Accepts also JavaScript object paths separated by "`.`".

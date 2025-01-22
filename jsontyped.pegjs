@@ -8,27 +8,76 @@
 Start
   = value:Value { return value; }
 
-Value = tp:Type_def? _ vl:Value_untyped { return tp ? { ...tp, $value: vl } : vl }
+Value
+  = tp:Type_def? _ vl:Value_untyped { return tp ? { ...tp, $value: vl } : vl; }
 
-// This is for normal JSON:
-// Value = Value_untyped
+// Define una `Type_def` que acepta URLs completas
+Type_def = Type_def_by_request / Type_def_by_js_property
 
-Type_def = "@" protocol:Type_protocol? resource:Js_path { return { $protocol: protocol, $type: resource } }
+Js_noun = [A-Za-z\$_] [A-Za-z0-9\$_]* { return text() }
 
-Type_protocol = protocol:Protocol_noun "://" { return protocol }
-
-Protocol_noun = [A-Za-z0-9_\$\-\.]+ { return text() }
+Js_noun_predotted =
+  "." noun:Js_noun
+    { return noun }
 
 Js_path = 
-  first:Js_noun_predotted_maybe
+  first:Js_noun
   others:Js_noun_predotted*
-    { return text() || [first].concat(others || []) }
+    { return [first].concat(others || []) }
 
-Js_noun = [A-Za-z_$] [A-Za-z0-9_$]* { return text() }
+Type_def_by_js_property
+  = "@" jspath:Js_path
+    {
+      return {
+        $protocol: jspath,
+      };
+    }
 
-Js_noun_predotted = ("." / "/") n:Js_noun { return n }
+Type_def_by_request
+  = "@" protocol:Type_protocol "//" "/"? host:Host path:Path? query:Query_string? fragment:Fragment? {
+      return {
+        $protocol: protocol,
+        $host: host,
+        $path: path || "/",
+        $query: query || null,
+        $fragment: fragment || null
+      };
+    }
 
-Js_noun_predotted_maybe = ("." / "/")? n:Js_noun { return n }
+Type_protocol
+  = protocol:([A-Za-z][A-Za-z0-9+\-.]* ":") {
+      return text().slice(0, -1); // Remueve el ":" del final
+    }
+
+Host
+  = host:([A-Za-z0-9\-._~%]+) {
+      return host.join("");
+    }
+
+Path
+  = path:("/" [A-Za-z0-9\-._~%!$&'()*+,;=:@/]*) {
+      return text().substr(1);
+    }
+
+Query_string
+  = "?" params:Query_param_list {
+      return params;
+    }
+
+Query_param_list
+  = head:Query_param tail:("&" Query_param)* {
+      return [head, ...tail.map(item => item[1])];
+    }
+
+Query_param
+  = key:[A-Za-z0-9\-._~%]+ "=" value:[A-Za-z0-9\-._~%]+ {
+      return { key: key.join(""), value: value.join("") };
+    }
+
+Fragment
+  = "#" id:[A-Za-z0-9\-._~%!$&'()*+,;=:@/]+ {
+      return id.join("");
+    }
 
 Value_untyped
   = Object

@@ -5,7 +5,7 @@
   "main": "jsontyped.js",
   "scripts": {
     "build": "npx pegjs jsontyped.pegjs && node fix.js",
-    "test": "npx mocha test.js",
+    "test": "npm run build && npx mocha test.js",
     "up": "bash up.sh"
   },
   "keywords": [
